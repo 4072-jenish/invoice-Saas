@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 app.use(
   cors({
-    origin: "https://invoicesaas-xi.vercel.app/",
+    origin: "https://invoicesaas-xi.vercel.app",
     credentials: true,
   })
 );
