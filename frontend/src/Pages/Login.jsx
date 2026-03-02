@@ -43,6 +43,8 @@ export default function Login() {
 
     setIsLoading(true);
     try {
+      console.log('login called');
+      
       const res = await API.post("/auth/login", { email, password });
       
       // Store token
