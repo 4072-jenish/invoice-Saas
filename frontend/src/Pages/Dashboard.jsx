@@ -195,7 +195,7 @@ export default function Dashboard() {
                 <div className="stat-value">{stats.paidInvoices}</div>
                 <div className="stat-trend positive">+5%</div>
               </div>
-            </div>
+            </div>  
           </div>
 
           <div className="stat-card">

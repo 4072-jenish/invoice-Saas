@@ -7,6 +7,8 @@ import Dashboard from "./Pages/Dashboard";
 import CreateInvoice from "./Pages/CreateInvoice";
 import AddCustomer from "./Pages/AddCustomers";
 import AllCustomers from "./Pages/AllCustomers";
+import EditCustomer from "./Pages/EditCustomer";
+import ViewCustomer from "./Pages/ViewCustomer";
 // import Invoices from "./Pages/Invoices";
 // import Customers from "./Pages/Customers";
 // import Settings from "./Pages/Settings";
@@ -83,6 +85,24 @@ function App() {
             
           </ProtectedRoute>
         } />
+
+        <Route path="/edit-customer/:id" element={
+          <ProtectedRoute>
+          
+              <EditCustomer />
+
+          </ProtectedRoute>
+          
+          } />
+          
+          <Route path="/single-customer/:id" element={
+          <ProtectedRoute>
+          
+              <ViewCustomer />
+
+          </ProtectedRoute>
+          
+          } />
         
       </Routes>
     </Router>

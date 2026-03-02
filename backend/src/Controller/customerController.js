@@ -19,12 +19,17 @@ const addCustomer = async (req , res) => {
   }
 }
 const allCustomers = async (req , res) => {
-     const customers = await prisma.customer.findMany();
+     const customers = await prisma.customer.findMany({
+          where : {
+         isDeleted: false 
+        }
+        });
      res.json(customers);
 }
 const getCustomer = async (req , res) => {
+    const {id} = req.params; 
     const customers = await prisma.customer.findMany({
-    where: { userId: req.userId },
+    where: { id: Number(id) , isDeleted : false},
   });
 
   res.json(customers);
@@ -44,7 +49,7 @@ const editCustomer = async (req , res) => {
     return res.status(404).json({ message: "Customer not found"});
    }else{
     const customer = await prisma.customer.update({
-      where: { id: Number(id) },
+      where: { id: Number(id) , isDeleted : false},
       data: {
         name,
         phone,
@@ -62,6 +67,8 @@ const editCustomer = async (req , res) => {
 }
 
 const deleteCustomer = async ( req , res ) => {
+     console.log("delete customer called");
+     
     const { id } = req.params;
 
     const exsisting = await prisma.customer.findUnique({
@@ -71,10 +78,11 @@ const deleteCustomer = async ( req , res ) => {
       if (!exsisting) {
         return res.status(404).json({ message: "Customer not found"});
        }else{
-        const customer = await prisma.customer.delete({
+        await prisma.customer.update({
           where: { id: Number(id) },
-        })
-    }
+            data: { isDeleted: true }
+        });
+    } 
 }
 
 module.exports = {

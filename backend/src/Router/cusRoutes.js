@@ -6,8 +6,8 @@ const custRouter = express.Router();
 
 custRouter.post('/addCustomer', auth ,addCustomer);
 custRouter.get('/allCustomer', auth ,allCustomers);
-custRouter.get('/getCustomer', auth ,getCustomer);
-custRouter.get('/editCustomer', auth ,editCustomer);
-custRouter.get('/deleteCustomer', auth ,deleteCustomer);
+custRouter.get('/getCustomer/:id', auth ,getCustomer);
+custRouter.put('/editCustomer/:id', auth ,editCustomer);
+custRouter.delete('/deleteCustomer/:id', auth ,deleteCustomer);
 
 module.exports = custRouter;

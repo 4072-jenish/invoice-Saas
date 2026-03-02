@@ -52,8 +52,10 @@ export default function AllCustomers() {
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this customer?")) {
+      console.log(id);
+      
       try {
-        await API.delete(`/customer/${id}`);
+        await API.delete(`/customer/deleteCustomer/${id}`);
         fetchCustomers();
       } catch (err) {
         console.error("Error deleting customer", err);
@@ -61,19 +63,6 @@ export default function AllCustomers() {
     }
   };
 
-  const handleBulkDelete = async () => {
-    if (selectedCustomers.length === 0) return;
-    
-    if (window.confirm(`Delete ${selectedCustomers.length} selected customers?`)) {
-      try {
-        await Promise.all(selectedCustomers.map(id => API.delete(`/customer/${id}`)));
-        setSelectedCustomers([]);
-        fetchCustomers();
-      } catch (err) {
-        console.error("Error deleting customers", err);
-      }
-    }
-  };
 
   const handleSelectAll = () => {
     if (selectedCustomers.length === filteredCustomers.length) {
@@ -166,7 +155,7 @@ export default function AllCustomers() {
             )}
             <button
               className="btn btn-primary"
-              onClick={() => navigate("/addCustomer")}
+              onClick={() => navigate("/add-customer")}
             >
               <span className="btn-icon">+</span>
               Add Customer
@@ -174,7 +163,6 @@ export default function AllCustomers() {
           </div>
         </div>
 
-        {/* Stats Cards */}
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-icon">👥</div>
@@ -357,7 +345,7 @@ export default function AllCustomers() {
                         <div className="action-buttons">
                           <button
                             className="action-btn view"
-                            onClick={() => navigate(`/customer/${customer.id}`)}
+                            onClick={() => navigate(`/single-customer/${customer.id}`)}
                             title="View Details"
                           >
                             👁️
@@ -395,7 +383,7 @@ export default function AllCustomers() {
                         <h3>No customers found</h3>
                         <p>{searchTerm ? "Try adjusting your search" : "Get started by adding your first customer"}</p>
                         {!searchTerm && (
-                          <button className="btn btn-primary" onClick={() => navigate("/addCustomer")}>
+                          <button className="btn btn-primary" onClick={() => navigate("/add-customer")}>
                             Add Customer
                           </button>
                         )}

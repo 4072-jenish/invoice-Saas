@@ -37,6 +37,7 @@ model Customer {
   name    String
   phone   String?
   email   String?
+  isDeleted Boolean @default(false)
 
   user User @relation(fields: [userId], references: [id])
   invoices Invoice[]

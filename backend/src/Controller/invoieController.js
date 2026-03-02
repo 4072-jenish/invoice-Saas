@@ -58,6 +58,11 @@ const allInvoice = async (req , res ) => {
       console.log("all Invoices called");
       
     const invoices = await prisma.invoice.findMany({
+        where : {
+          customer : {
+            isDeleted : false
+          }
+        },
        include: {
          customer : true,
          items : true
@@ -124,6 +129,7 @@ condition
         customerId: Number(customerId),
       }
     })
+    res.status(200).json({message : "invoice updated successfully"}, invoice);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

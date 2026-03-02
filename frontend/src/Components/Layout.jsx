@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 export default function Layout({ children }) {
   const location = useLocation();
   
-  if (location.pathname === '/login' || location.pathname === '/register') {
+  if (location.pathname === '/' || location.pathname === '/register') {
     return <>{children}</>;
   }
 

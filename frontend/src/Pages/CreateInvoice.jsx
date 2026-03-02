@@ -83,7 +83,6 @@ export default function CreateInvoice() {
       await API.post("/invoice/creatInvoice", {
         customerId,
         items,
-        status,
         invoiceDate,
         dueDate,
         subtotal: calculateSubtotal(),

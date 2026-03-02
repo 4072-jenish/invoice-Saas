@@ -91,8 +91,9 @@ export default function Register() {
   };
 
   const handleRegister = async () => {
-    if (!validateForm()) return;
-
+    console.log("it is on register frontend");
+    // if (!validateForm()) return;
+    
     setIsLoading(true);
     try {
       const res = await API.post("/auth/regUser", {
@@ -109,7 +110,7 @@ export default function Register() {
       // Success animation
       setTimeout(() => {
         alert("🎉 Registration successful! Welcome aboard!");
-        navigate("/dashboard");
+        navigate("/");
       }, 500);
 
     } catch (err) {
