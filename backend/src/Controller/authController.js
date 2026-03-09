@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 
 const regUser = async (req, res) => {
     try {
+      console.log("register user from backend");
+      
     const { name, email, password } = req.body;
 
     const existingUser = await prisma.user.findUnique({
@@ -27,6 +29,8 @@ const regUser = async (req, res) => {
 
     res.json({ message: "User registered successfully", user });
   } catch (err) {
+    console.log(err);
+    
     res.status(500).json({ error: err.message });
   }
 }
@@ -34,12 +38,14 @@ const regUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-    
+        
         const user = await prisma.user.findUnique({
           where: { email },
         });
+        console.log(user);
     
         if (!user) {
+          
           return res.status(400).json({ message: "Invalid credentials" });
         }
     
@@ -57,6 +63,7 @@ const loginUser = async (req, res) => {
     
         res.json({ message: "Login successful", token });
       } catch (err) {
+        console.log(err);
         res.status(500).json({ error: err.message });
       }
 }

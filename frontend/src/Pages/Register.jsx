@@ -92,7 +92,7 @@ export default function Register() {
 
   const handleRegister = async () => {
     console.log("it is on register frontend");
-    // if (!validateForm()) return;
+
     
     setIsLoading(true);
     try {
@@ -102,7 +102,9 @@ export default function Register() {
         password: formData.password
       });
 
-      // Auto-login after registration (optional)
+      console.log("api called");
+      
+
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
       }

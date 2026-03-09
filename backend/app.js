@@ -10,13 +10,13 @@ app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 app.use(
   cors({
-    origin: "https://invoicesaas-xi.vercel.app",
+    origin: "http://localhost:5173",
     credentials: true, 
   })
 );
 app.use('/', indexRouter);
  
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
