@@ -5,66 +5,62 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  plan      String   @default("free")
-  createdAt DateTime @default(now())
-
+  id         Int        @id @default(autoincrement())
+  name       String
+  email      String     @unique
+  password   String
+  plan       String     @default("free")
+  createdAt  DateTime   @default(now())
   businesses Business[]
   customers  Customer[]
   invoices   Invoice[]
 }
 
 model Business {
-  id           Int    @id @default(autoincrement())
+  id           Int     @id @default(autoincrement())
   userId       Int
   businessName String
   gstNumber    String?
   address      String?
   logo         String?
-
-  user User @relation(fields: [userId], references: [id])
+  user         User    @relation(fields: [userId], references: [id])
 }
 
 model Customer {
-  id      Int    @id @default(autoincrement())
-  userId  Int
-  name    String
-  phone   String?
-  email   String?
-  isDeleted Boolean @default(false)
-
-  user User @relation(fields: [userId], references: [id])
-  invoices Invoice[]
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  name      String
+  phone     String?
+  email     String?
+  isDeleted Boolean   @default(false)
+  user      User      @relation(fields: [userId], references: [id])
+  invoices  Invoice[]
 }
 
 model Invoice {
-  id         Int      @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
+  userId        Int
+  customerId    Int
+  total         Float
+  gstAmount     Float
+  status        String        @default("unpaid")
+  createdAt     DateTime      @default(now())
   invoiceNumber String
-  userId     Int
-  customerId Int
-  total      Float
-  gstAmount  Float
-  status     String   @default("unpaid")
-  createdAt  DateTime @default(now())
-
-  user     User     @relation(fields: [userId], references: [id])
-  customer Customer @relation(fields: [customerId], references: [id])
-  items    InvoiceItem[]
+  customer      Customer      @relation(fields: [customerId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+  items         InvoiceItem[]
 }
 
 model InvoiceItem {
-  id         Int    @id @default(autoincrement())
-  invoiceId  Int
+  id          Int     @id @default(autoincrement())
+  invoiceId   Int
   productName String
   quantity    Int
   price       Float
   gstPercent  Float
-
-  invoice Invoice @relation(fields: [invoiceId], references: [id])
+  invoice     Invoice @relation(fields: [invoiceId], references: [id])
 }
