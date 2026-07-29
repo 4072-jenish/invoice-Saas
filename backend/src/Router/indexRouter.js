@@ -5,12 +5,14 @@ const invoiceRouter = require('./invoiceRouter');
 const custRouter = require('./cusRoutes');
 const auth = require('../Middleware/authMiddleware');
 const { generateInvoicePDF } = require('../Controller/invoieController');
+const productRouter = require('./productRouter');
 const indexRouter = express.Router();
 
 indexRouter.use('/auth', authRouter);
-indexRouter.use('/bus', busRouter);
-indexRouter.use('/customer', custRouter);
-indexRouter.use('/invoice', invoiceRouter);
+indexRouter.use('/bus', auth ,busRouter);
+indexRouter.use('/customer', auth ,custRouter);
+indexRouter.use('/invoice', auth ,invoiceRouter);
+indexRouter.use('/products', auth ,productRouter);
 indexRouter.get('/:id/generateInvoicePDF' , auth ,generateInvoicePDF);
 
 

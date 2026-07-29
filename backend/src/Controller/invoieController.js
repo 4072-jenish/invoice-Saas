@@ -42,9 +42,6 @@ const creatInvoice = async (req , res) => {
       },
       include: { items: true },
     });
-
-    console.log(invoice);
-    
     
     res.json(invoice);
   } catch (err) {
