@@ -64,3 +64,13 @@ model InvoiceItem {
   gstPercent  Float
   invoice     Invoice @relation(fields: [invoiceId], references: [id])
 }
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  name        String
+  price       Float
+  gstPercent  Float
+  invoice     Invoice @relation(fields: [invoiceId], references: [id])
+  invoiceId   Int
+  items       InvoiceItem[]
+}
