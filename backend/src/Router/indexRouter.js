@@ -9,10 +9,10 @@ const productRouter = require('./productRouter');
 const indexRouter = express.Router();
 
 indexRouter.use('/auth', authRouter);
-indexRouter.use('/bus', auth ,busRouter);
-indexRouter.use('/customer', auth ,custRouter);
-indexRouter.use('/invoice', auth ,invoiceRouter);
-indexRouter.use('/products', auth ,productRouter);
+indexRouter.use('/bus', busRouter);
+indexRouter.use('/customer', custRouter);
+indexRouter.use('/invoice', invoiceRouter);
+indexRouter.use('/products', productRouter);
 indexRouter.get('/:id/generateInvoicePDF' , auth ,generateInvoicePDF);
 
 

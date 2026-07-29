@@ -4,7 +4,7 @@ const auth = require('../Middleware/authMiddleware');
 
 const busRouter = express.Router();
 
-busRouter.use('/addBusiness' ,addBusiness);
+busRouter.use('/addBusiness' , auth ,addBusiness);
 
 
 module.exports = busRouter;

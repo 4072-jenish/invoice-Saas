@@ -1,73 +1,178 @@
+
 const prisma = require("../../prisma");
 
-const existingProduct = async (name) => {
-  return await prisma.product.findUnique({
-    where: { name },
+// ===================== Helper Functions =====================
+
+const findProductByName = async (name) => {
+  return await prisma.product.findFirst({
+    where: {
+      name,
+    },
   });
 };
+
+const findProductById = async (id) => {
+  return await prisma.product.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
+};
+
+// ===================== Get All Products =====================
 
 const getProducts = async (req, res) => {
-  const products = await prisma.product.findMany();
-  res.json("Products fetched successfully", products);
+  try {
+    const products = await prisma.product.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json({
+      message: "Products fetched successfully",
+      products,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
 };
+
+// ===================== Get Single Product =====================
 
 const singleProduct = async (req, res) => {
-  const { id } = req.params;
-  const product = await prisma.product.findUnique({
-    where: { id },
-  });
-  if (!product) {
-    return res.status(404).json("Product not found");
+  try {
+    const { id } = req.params;
+
+    const product = await findProductById(id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Product fetched successfully",
+      product,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
   }
-  res.json("Product fetched successfully", product);
 };
+
+// ===================== Create Product =====================
 
 const createProduct = async (req, res) => {
-  const { name, price, gstPercent } = req.body;
-  const existingProduct = await existingProduct(name);
-  if (existingProduct) {
-    return res.status(400).json("Product already exists");
-  } 
-  const product = await prisma.product.create({
-    data: {
-      name,
-      price,
-      gstPercent,
-    },
-  });
-  res.json("Product created successfully", product);
+  try {
+
+    const userId = req.userId; // ✅ Correct
+
+    const { name, price, gstPercent, stock } = req.body;
+
+    const existedProduct = await findProductByName(name);
+
+    if (existedProduct) {
+      return res.status(400).json({
+        message: "Product already exists",
+      });
+    }
+
+    const product = await prisma.product.create({
+      data: {
+        userId,
+        name,
+        price,
+        gstPercent,
+        stock,
+      },
+    });
+
+    return res.status(201).json({
+      message: "Product created successfully",
+      product,
+    });
+  } catch (error) {
+
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
 };
+// ===================== Update Product =====================
 
 const updateProduct = async (req, res) => {
-  const { id } = req.params;
-  const { name, price, gstPercent } = req.body;
-  const existingProduct = await existingProduct(id);
-  if (!existingProduct) {
-    return res.status(404).json("Product not found");
+  try {
+    const { id } = req.params;
+    const { name, price, gstPercent, stock } = req.body;
+    console.log("updateProduct", id, name, price, gstPercent, stock)
+
+    const existedProduct = await findProductById(id);
+
+    if (!existedProduct) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    const product = await prisma.product.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        name,
+        price,
+        gstPercent,
+        stock,
+      },
+    });
+
+    return res.status(200).json({
+      message: "Product updated successfully",
+      product,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
   }
-  
-  const product = await prisma.product.update({
-    where: { id },
-    data: {
-      name,
-      price,
-      gstPercent,
-    },
-  });
-  res.json("Product updated successfully", product);
 };
 
+// ===================== Delete Product =====================
+
 const deleteProduct = async (req, res) => {
-  const { id } = req.params;
-  const existingProduct = await existingProduct(id);
-  if (!existingProduct) {
-    return res.status(404).json("Product not found");
+  try {
+    const { id } = req.params;
+
+    const existedProduct = await findProductById(id);
+
+    if (!existedProduct) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    await prisma.product.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    return res.status(200).json({
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
   }
-  await prisma.product.delete({
-    where: { id },
-  });
-  res.json("Product deleted successfully");
 };
+
+// ===================== Filter Products =====================
 
 const filterProducts = async (req, res) => {
   try {
@@ -115,15 +220,48 @@ const filterProducts = async (req, res) => {
       orderBy,
     });
 
-    if (products.length === 0) {
-      return res.status(404).json({
-        message: "No products found",
-      });
-    }
-
     return res.status(200).json({
       message: "Products fetched successfully",
       products,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const toggleProductStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await prisma.product.findFirst({
+      where: {
+        id: Number(id),
+        userId: req.userId,
+      },
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    const updatedProduct = await prisma.product.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        isDisabled: !product.isDisabled,
+      },
+    });
+
+    return res.status(200).json({
+      message: updatedProduct.isDisabled
+        ? "Product disabled successfully"
+        : "Product enabled successfully",
+      product: updatedProduct,
     });
   } catch (error) {
     return res.status(500).json({
@@ -139,4 +277,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   filterProducts,
+  toggleProductStatus
 };

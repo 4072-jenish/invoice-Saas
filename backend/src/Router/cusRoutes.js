@@ -4,10 +4,10 @@ const auth = require('../Middleware/authMiddleware');
 
 const custRouter = express.Router();
 
-custRouter.post('/addCustomer' ,addCustomer);
-custRouter.get('/allCustomer',allCustomers);
-custRouter.get('/getCustomer/:id',getCustomer);
-custRouter.put('/editCustomer/:id',editCustomer);
-custRouter.delete('/deleteCustomer/:id',deleteCustomer);
+custRouter.post('/addCustomer', auth ,addCustomer);
+custRouter.get('/allCustomer', auth ,allCustomers);
+custRouter.get('/getCustomer/:id', auth ,getCustomer);
+custRouter.put('/editCustomer/:id', auth ,editCustomer);
+custRouter.delete('/deleteCustomer/:id', auth ,deleteCustomer);
 
 module.exports = custRouter;
