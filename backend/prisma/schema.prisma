@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -15,6 +15,7 @@ model User {
   password   String
   plan       String     @default("free")
   createdAt  DateTime   @default(now())
+
   businesses Business[]
   customers  Customer[]
   invoices   Invoice[]
@@ -27,7 +28,8 @@ model Business {
   gstNumber    String?
   address      String?
   logo         String?
-  user         User    @relation(fields: [userId], references: [id])
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Customer {
@@ -37,8 +39,9 @@ model Customer {
   phone     String?
   email     String?
   isDeleted Boolean   @default(false)
-  user      User      @relation(fields: [userId], references: [id])
-  invoices  Invoice[]
+
+  user     User      @relation(fields: [userId], references: [id])
+  invoices Invoice[]
 }
 
 model Invoice {
@@ -50,9 +53,10 @@ model Invoice {
   status        String        @default("unpaid")
   createdAt     DateTime      @default(now())
   invoiceNumber String
-  customer      Customer      @relation(fields: [customerId], references: [id])
-  user          User          @relation(fields: [userId], references: [id])
-  items         InvoiceItem[]
+
+  customer Customer      @relation(fields: [customerId], references: [id])
+  user     User          @relation(fields: [userId], references: [id])
+  items    InvoiceItem[]
 }
 
 model InvoiceItem {
@@ -62,15 +66,13 @@ model InvoiceItem {
   quantity    Int
   price       Float
   gstPercent  Float
-  invoice     Invoice @relation(fields: [invoiceId], references: [id])
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id])
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
-  name        String
-  price       Float
-  gstPercent  Float
-  invoice     Invoice @relation(fields: [invoiceId], references: [id])
-  invoiceId   Int
-  items       InvoiceItem[]
+  id         Int    @id @default(autoincrement())
+  name       String
+  price      Float
+  gstPercent Float
 }

@@ -11,7 +11,7 @@ app.use(express.urlencoded({extended : true}));
 app.use(
   cors({
     origin: [
-      "https://invoice-saas-redeploed.vercel.app",
+      "https://invoice-editor-wheat.vercel.app",
       "http://localhost:5173",
     ],
     credentials: true,
